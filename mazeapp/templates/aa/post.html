@@ -1,0 +1,63 @@
+{% extends "main.html" %}
+{% load comments %}
+
+{% block con_title %}
+    {{ p.title }}
+{% endblock %}
+
+{% block content %}
+    {% if p.pic %}
+        <img src="{{ STATIC_URL }}{{ p.pic }}" width="100%" style="padding:5px"/>
+    {% endif %}
+    <div class="desc">
+        <p>{{ p.body }}</p>
+    </div>
+    <div class="info_post_box">
+        Posted by <a class="link" href='{% url 'profile' p.user %}'>{{ p.user }}</a> <i><span class="thistime" data-livestamp="{{ p.timestamp|date:"U" }}" ></span></i>
+        {% if p.user.user.username == user.username %}
+            <a class="link" href="{% url 'editpost' p.pk %}">Edit</a> |
+            <a class="link" href="javascript:void(0);" onclick="deletepost('{{ p.pk }}')">Delete</a>
+        {% endif %}
+    </div>
+
+    <div class="clip_view_bot">
+        {% if user.is_authenticated %}
+            {% get_comment_form for p as form %}
+            <form action="{% comment_form_target %}" method="POST">
+                <div  class="comment_form">
+                    {% csrf_token %}
+                    {{ form.content_type }}
+                    {{ form.object_pk }}
+                    {{ form.timestamp }}
+                    {{ form.security_hash }}
+                    <input type="hidden" name="name" value="{{ user }}" />
+                    <input type="hidden" name="next" value="{% url 'post' p.pk %}" />
+                    <input type="text" name="comment" placeholder="Enter your comment here.." class="comment"/>
+                    <div class="comment_view_bot">
+                        <input type="submit" value="Add comment" id="id_submit" />
+                    </div>
+                </div>
+            </form>
+        {% else %}
+            <p>Please <a href="{% url 'login' %}">log in</a> to leave a comment.</p>
+        {% endif %}
+        {% get_comment_list for p as comment_list%}
+        {% if comment_list %}
+            <h3>Comments ({{ comment_list|length }}):</h3>
+            {% for comment in comment_list reversed %}
+            <div class="comment_box">
+                <div class="comment_box_top">
+                <a>{{ comment.comment }}</a>
+                </div>
+                <div class="comment_box_bot">
+                    Added by <a href="{% url 'profile' comment.user %}" class="link">{{ comment.user_name }}</a> <i><span class="thistime" data-livestamp="{{ comment.submit_date|date:"U" }}" ></span></i>
+                </div>
+            </div>
+        {% endfor %}
+        {% else %}
+            <center>No comments yet, be first!</center>
+        {% endif %}
+    </div>
+
+
+{% endblock %}

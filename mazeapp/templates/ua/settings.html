@@ -1,0 +1,15 @@
+{% extends "main.html" %}
+
+{% block content %}
+    <div class="sign_boxs_place">
+        <h2>{{ user.username }}'s Profile - Settings</h2>
+
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form_jump">{{ field }}</div>
+            {% endfor %}
+            <input type="submit" value="Edit">
+        </form>
+    </div>
+{% endblock %}

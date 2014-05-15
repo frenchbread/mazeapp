@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+{% block con_title %}
+       Edit post
+{% endblock %}
+
+{% block content %}
+    <div class="sign_boxs_place">
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form_jump">{{ field }}</div>
+            {% endfor %}
+            <div class="go_right">
+                <input type="submit" value="Update" />
+            </div>
+        </form>
+    </div>
+{% endblock %}

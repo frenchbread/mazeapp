@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+
+{% block con_title %}
+    {{ t }}
+{% endblock %}
+
+{% block content %}
+        {% if ap.count > 0 %}
+        <div class="clip_list" >
+            {% for p in ap %}
+                <div style="margin:5px;display: -webkit-flex;display: flex;border-bottom:1px solid #eee;padding:5px">
+                    <div style="width:50px;height:50px;background:url('{{ STATIC_URL }}{{ p.pic }}') no-repeat center center;background-size: cover ">
+                    </div>
+                    <div style="-webkit-flex:1;flex: 1;padding-left:10px;">
+                        <p>
+                            <a class="link" style="color:#555" href="{% url 'profile' p.user.username %}">{{ p.user.username|capfirst }}</a>
+                            <span id="this_f{{ p.user_id }}">
+                                {% if p.user_id == user.id %}
+                                    <a class="link" href="{% url 'settings' %}">Edit profile</a>
+                                {% else %}
+                                    {% if p.user_id not in fed %}
+                                        <a href="javascript:void(0);" class="link"   onclick="follow('{{ p.user_id }}')" >Follow</a>
+                                    {% else %}
+                                        <a href="javascript:void(0);" class="link"  onclick="unfollow('{{ p.user_id }}')">Unfollow</a>
+                                    {% endif %}
+                                {% endif %}
+                            </span>
+                        </p>
+                        <p><i>{{ p.bio }}</i></p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="none_here">Noone here.</div>
+        {% endif %}
+{% endblock %}

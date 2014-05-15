@@ -1,0 +1,18 @@
+{% extends 'profile.html' %}
+{% block info %}
+    <h2>{{ u.username }}'s Profile</h2>
+    {% if m.bio %}
+        <div>
+            <b>Bio:</b>
+            {{ m.bio }}
+        </div>
+        <div>
+            <b>Web-site:</b>
+            <a href="{{ m.website }}" >{{ m.website }}</a>
+        </div>
+        <div>
+            <b>Location:</b>
+            {{ m.location }}
+        </div>
+    {% endif %}
+{% endblock %}

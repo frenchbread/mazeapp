@@ -1,0 +1,109 @@
+{% extends "main.html" %}
+{% load comments %}
+{% block con_title %}
+    <style>
+        .main_top{
+            padding: 0;
+            background:  url('{{ STATIC_URL }}img/bg.jpg') center center no-repeat;
+            background-size: cover;
+        }
+    </style>
+    <div class="prof_boax_part">
+        <div class="pic_name_handler">
+            <div class="prof_pic_box">
+                <div class="prof_pic" style="background-image: url('{{ STATIC_URL }}{{ m.pic }}')"></div>
+            </div>
+            <div class="prof_name">
+                {{ u.username|capfirst }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="user_prof_menu">
+
+    </div>
+    <div class="user_prof_cont">
+    </div>
+    <div class="menu_hand_box">
+        <a class="link" href="{% url 'profile' u.username %}">{{ u.username|capfirst }}'s posts </a> |
+        <a class="link" href="{% url 'profilelikes' u.username %}">Likes</a> |
+        <a class="link" href="{% url 'profileinfo' u.username %}">Info</a> |
+        <a class="link" href="{% url 'profilefollowing' u.username %}">Following</a> |
+        <a class="link" href="{% url 'profilefollowers' u.username %}">Followers</a> |
+        {% if m.user_id == user.id %}
+            <a class="link" href="{% url 'settings' %}">Edit profile </a>
+        {% else %}
+            <span id="followThatShit">
+                {% if a == "follow" %}
+                    <a href="javascript:void(0);" class="link"   onclick="follow('{{ m.user_id }}')" >Follow</a>
+                {% elif a == "unfollow" %}
+                    <a href="javascript:void(0);" class="link"  onclick="unfollow('{{ m.user_id }}')">Unfollow</a>
+                {% endif %}
+            </span>
+        {% endif %}
+    </div>
+    <div class="sign_boxs_place">
+
+        {% block info %}
+            {% if p %}
+            <div class="clip_list" >
+                {% for post in p %}
+                    <div class="clip_box">
+                        <div class="clip_head">
+                            <div class="clip_head_left">
+                                <a class="link" href="{% url 'post' post.id %}">{{ post.title }}</a>
+                            </div>
+                            <div class="clip_head_right">
+                                <span class="thistime" data-livestamp="{{ post.timestamp|date:"U" }}" ></span>
+                            </div>
+                        </div>
+                        <div class="clip_body">
+                            {% if post.pic %}
+                                <img src="{{ STATIC_URL }}{{ post.pic }}" width="100%" style="padding:5px"/>
+                            {% endif %}
+                            <a>{{ post.body|truncatewords:"50" }}</a>
+                        </div>
+                        <div class="clip_bot">
+                            <div class="clip_bot_left" id="this_p{{ post.pk }}">
+                                {% if not user.is_authenticated %}
+                                    <a disabled title="Please login to like">Like</a>
+                                {% elif post.pk not in l %}
+                                    <a href="javascript:void(0);" class="link" onclick="like('{{ post.pk }}')" >Like</a>
+                                {% else %}
+                                    <a href="javascript:void(0);" class="link" onclick="unlike('{{ post.pk }}')" >Liked</a>
+                                {% endif %}
+                            </div>
+                            <div class="clip_bot_right">
+                                {% get_comment_count for post as comment_count %}
+                                {{ comment_count }} Comment{{ comment_count|pluralize }}  |
+                                {{ post.likes }} Like{{ post.likes|pluralize }} |
+                                <a class="link" href="{% url 'profile' post.user %}">{{ post.user }}</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                {% if p.has_previous %}
+                    {% if p.previous_page_number == 1 %}
+                        <a class="link" href="{% url 'allposts' %}">&#8592; Prev</a>
+                    {% else %}
+                        <a class="link" href="?page={{ p.previous_page_number }}">&#8592; Prev</a>
+                    {% endif %}
+                {% endif %}
+                <span class="current">
+                Page {{ p.number }} of {{ p.paginator.num_pages }}
+            </span>
+                {% if p.has_next %}
+                    <a class="link" href="?page={{ p.next_page_number }}">Next &#8594;</a>
+                {% endif %}
+            </div>
+            {% else %}
+                <div class="none_here">There is no any stories yet.</div>
+            {% endif %}
+        {% endblock %}
+
+    </div>
+{% endblock %}

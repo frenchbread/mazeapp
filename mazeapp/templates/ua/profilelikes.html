@@ -1,0 +1,61 @@
+{% extends 'profile.html' %}
+{% load comments %}
+{% block info %}
+    {% if p %}
+        <div class="clip_list" >
+            {% for post in p %}
+                <div class="clip_box">
+                    <div class="clip_head">
+                        <div class="clip_head_left">
+                            <a class="link" href="{% url 'post' post.id %}">{{ post.title }}</a>
+                        </div>
+                        <div class="clip_head_right">
+                            <span class="thistime" data-livestamp="{{ post.timestamp|date:"U" }}" ></span>
+                        </div>
+                    </div>
+                    <div class="clip_body">
+                        {% if post.pic %}
+                            <img src="{{ STATIC_URL }}{{ post.pic }}" width="100%" style="padding:5px"/>
+                        {% endif %}
+                        <a>{{ post.body|truncatewords:"50" }}</a>
+                    </div>
+                    <div class="clip_bot">
+                        <div class="clip_bot_left" id="this_p{{ post.pk }}">
+                            {% if not user.is_authenticated %}
+                                <a disabled title="Please login to like">Like</a>
+                            {% elif post.pk not in l %}
+                                <a href="javascript:void(0);" class="link" onclick="like('{{ post.pk }}')" >Like</a>
+                            {% else %}
+                                <a href="javascript:void(0);" class="link" onclick="unlike('{{ post.pk }}')" >Liked</a>
+                            {% endif %}
+                        </div>
+                        <div class="clip_bot_right">
+                            {% get_comment_count for post as comment_count %}
+                            {{ comment_count }} Comment{{ comment_count|pluralize }}  |
+                            {{ post.likes }} Like{{ post.likes|pluralize }} |
+                            <a class="link" href="{% url 'profile' post.user %}">{{ post.user }}</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="pagination">
+            {% if p.has_previous %}
+                {% if p.previous_page_number == 1 %}
+                    <a class="link" href="{% url 'allposts' %}">&#8592; Prev</a>
+                {% else %}
+                    <a class="link" href="?page={{ p.previous_page_number }}">&#8592; Prev</a>
+                {% endif %}
+            {% endif %}
+            <span class="current">
+                Page {{ p.number }} of {{ p.paginator.num_pages }}
+            </span>
+            {% if p.has_next %}
+                <a class="link" href="?page={{ p.next_page_number }}">Next &#8594;</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="none_here">There is no any stories yet.</div>
+    {% endif %}
+
+{% endblock %}

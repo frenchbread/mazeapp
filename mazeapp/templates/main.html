@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maze</title>
+    <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ui.css" />
+
+    <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/moment.min.js"></script>
+    <script src="{{ STATIC_URL }}js/livestamp.js"></script>
+    <script src="{{ STATIC_URL }}js/ui.js"></script>
+    <script src="{{ STATIC_URL }}js/like.js"></script>
+    <script src="{{ STATIC_URL }}js/stuff.js"></script>
+    <script src="{{ STATIC_URL }}js/follow.js"></script>
+</head>
+<body>
+    {% if user.is_authenticated %}
+
+        <div class="header">
+            <div class="past_head">
+                <div id="logo">
+                    <a href="{% url 'home' %}"></a>
+                </div>
+                <a href="{% url 'home' %}" class="link">Home</a>
+                <a href="{% url 'allpeople' %}" class="link">People</a>
+                <a href="{% url 'map' %}" class="link">Map</a>
+                <a href="{% url 'newpost' %}" class="link">New</a>
+
+                <a href="{% url 'profile' user.username %}" class="link"><b>{{ user.username|capfirst }}</b></a>
+                <a href="{% url 'logout' %}" class="link">Logout</a>
+            </div>
+        </div>
+        <div class="main_cont">
+            <div class="main_top">
+                {% block con_title %}
+                {% endblock %}
+            </div>
+            <div class="main_feed">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+
+    {% else %}
+        <div class="hello_main">
+            <div class="hello_box">
+                <h1>Maze</h1>
+                <a href="{% url 'login' %}" class="link">Login</a> |
+                <a href="{% url 'registration_register' %}" class="link">Sign Up</a>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maze</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/main.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ui.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/normalize.css" />
+
+    <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}js/stuff.js"></script>
+    <script src="{{ STATIC_URL }}js/ui.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="past_head">
+            <div id="logo">
+                <a href="{% url 'home' %}"></a>
+            </div>
+            <a href="{% url 'login' %}" class="link">Login</a>
+            <a href="{% url 'registration_register' %}" class="link">SignUp</a>
+        </div>
+    </div>
+    {% block cont_stuff %}
+    {% endblock %}
+</body>
+</html>
